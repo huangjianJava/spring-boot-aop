@@ -1,13 +1,4 @@
-[2018-08-28 14:02:12.339] [ERROR] [http-nio-8080-exec-7] com.henry.controller.DemoController Line:38  - controller modifyPhone2=============================
-[2018-08-28 16:28:52.708] [ERROR] [http-nio-8080-exec-4] com.henry.advice.WebLogAopAspect Line:85  - checkSign入参有误
-[2018-08-28 17:17:05.267] [ERROR] [http-nio-8080-exec-1] com.henry.controller.DemoController Line:31  - controller modifyPhone=============================
-[2018-08-28 17:43:14.478] [ERROR] [http-nio-8080-exec-1] com.henry.controller.DemoController Line:31  - controller modifyPhone=============================
-[2018-08-28 17:46:57.586] [ERROR] [http-nio-8080-exec-1] com.henry.controller.DemoController Line:31  - controller modifyPhone=============================
-[2018-08-28 17:51:55.965] [ERROR] [http-nio-8080-exec-1] com.henry.controller.DemoController Line:31  - controller modifyPhone=============================
-[2018-08-28 17:52:28.402] [ERROR] [http-nio-8080-exec-1] com.henry.controller.DemoController Line:31  - controller modifyPhone=============================
-[2018-08-28 17:53:32.856] [ERROR] [http-nio-8080-exec-2] com.henry.controller.DemoController Line:31  - controller modifyPhone=============================
-[2018-08-28 17:53:44.520] [ERROR] [http-nio-8080-exec-4] com.henry.controller.DemoController Line:31  - controller modifyPhone=============================
-[2018-08-28 17:54:50.108] [ERROR] [http-nio-8080-exec-6] com.henry.controller.DemoController Line:31  - controller modifyPhone=============================
-[2018-08-28 17:58:30.527] [ERROR] [http-nio-8080-exec-2] com.henry.utils.ObjectUtils Line:64  - ObjectUtils,method:objectToMap,error:[C cannot be cast to java.lang.String
-[2018-08-28 17:59:20.672] [ERROR] [http-nio-8080-exec-5] com.henry.utils.ObjectUtils Line:64  - ObjectUtils,method:objectToMap,error:[C cannot be cast to java.lang.String
-[2018-08-28 18:01:31.320] [ERROR] [http-nio-8080-exec-1] com.henry.utils.ObjectUtils Line:64  - ObjectUtils,method:objectToMap,error:[C cannot be cast to java.lang.String
+[2018-08-29 10:07:22.237] [ERROR] [http-nio-8080-exec-3] com.henry.controller.DemoController Line:29  - controller modifyPhone=============================
+[2018-08-29 10:25:39.184] [ERROR] [http-nio-8080-exec-1] com.henry.controller.DemoController Line:29  - controller modifyPhone=============================
+[2018-08-29 10:26:25.856] [ERROR] [http-nio-8080-exec-1] com.henry.controller.DemoController Line:29  - controller modifyPhone=============================
+[2018-08-29 10:38:16.065] [ERROR] [http-nio-8080-exec-2] com.henry.controller.DemoController Line:29  - controller modifyPhone=============================

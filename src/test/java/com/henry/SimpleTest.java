@@ -3,6 +3,7 @@ package com.henry;
 import com.alibaba.fastjson.JSON;
 import com.henry.common.utils.HttpUtil;
 import com.henry.dto.ModifyPasswordReqDto;
+import com.henry.dto.SignTestReqDto;
 import com.henry.utils.ObjectUtils;
 import com.henry.utils.RsaCryptUtil;
 import org.junit.Test;
@@ -45,6 +46,23 @@ public class SimpleTest {
             "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCOdxKM4vLrMnzLXOyjcTCOA62gvNAKio3MA22V\n" +
             "FOhDXAuf8V1V81vVeHSrOv4UYB3aXuk4SbCdg/8XmJ8jK6nss4X/7KBdnFZrD/LswQedJeWcYlDe\n" +
             "gBcFV3Xp87AHBRjMHTFv0f4mpiqwZHmKb9iP2jIlLUBszMeylGO9WmOm5wIDAQAB";
+
+    @Test
+    public void testObjectUtils(){
+        ModifyPasswordReqDto dto = ModifyPasswordReqDto.builder()
+                .phone("13632598743")
+                .newLoginPassword("111")
+                .oldLoginPassword("222")
+                .build();
+        SignTestReqDto signDto = SignTestReqDto.builder()
+                .name("小米")
+                .modifyPasswordReqDto(dto).build();
+        String json = JSON.toJSONString(signDto);
+
+        Map<String, Object> paramsMap = ObjectUtils.objectToMap2(signDto);
+        String unencryptedSign = ObjectUtils.mapToString2(paramsMap,"&");
+        System.out.println("待签名的字符串:" + unencryptedSign);
+    }
 
     @Test
     public void testSign() throws Exception {
@@ -106,7 +124,7 @@ public class SimpleTest {
         /*boolean verifySuccess = RsaCryptUtil.verify(unencryptedSign.getBytes(), PUBLICKEY, URLDecoder.decode(encoder,"UTF-8"));
         System.out.println("验签结果：" + verifySuccess);*/
 
-        String url = "http://localhost:8080/demo/sign-test?name=nike&age=18&timestamp=" + currentMillis + "&app_id=2014072300007148&sign=" + encoder;
+        String url = "http://localhost:8080/sign-demo/easy-dto?timestamp=" + currentMillis + "&app_id=2014072300007148&sign=" + encoder;
         String response = HttpUtil.post(url,json);
         System.out.println("response:" + response);
 
