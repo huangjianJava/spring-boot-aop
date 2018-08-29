@@ -1,11 +1,14 @@
 package com.henry.advice;
 
+import com.google.common.base.Charsets;
 import com.google.common.collect.Maps;
 import com.henry.common.aop.RequestProcess;
 import com.henry.common.aop.RequestProcessAop;
+import com.henry.dto.SinterInterfaceReqDto;
 import com.henry.result.enums.TokenResultEnum;
 import com.henry.utils.ObjectUtils;
 import com.henry.utils.RsaCryptUtil;
+import com.henry.utils.SinterUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -18,6 +21,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -35,11 +39,13 @@ public class WebLogAopAspect extends RequestProcessAop {
 
     private static Logger logger = LoggerFactory.getLogger(WebLogAopAspect.class);
 
-    private static final String SECRET_KEY = "321f3c83-231d-4739-8f8c-5860f1406377";
-
-    public static final String PUBLIC_KEY = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCOdxKM4vLrMnzLXOyjcTCOA62gvNAKio3MA22V\n" +
-            "FOhDXAuf8V1V81vVeHSrOv4UYB3aXuk4SbCdg/8XmJ8jK6nss4X/7KBdnFZrD/LswQedJeWcYlDe\n" +
-            "gBcFV3Xp87AHBRjMHTFv0f4mpiqwZHmKb9iP2jIlLUBszMeylGO9WmOm5wIDAQAB";
+    /**
+     * key:用户ID value:加密私钥  模拟数据库
+     */
+    public final static Map<String, String> BUSINESS_INFO = new HashMap<String, String>() {{
+        put("1342581", "27af266a-124e-417c-9936-2946b355ff1f");
+        put("1341111", "28af266a-224e-517c-9136-3946b355ff1d");
+    }};
 
     @Override
     protected boolean getCheckToken() {
@@ -52,15 +58,17 @@ public class WebLogAopAspect extends RequestProcessAop {
     }
 
     @Override
-    protected TokenResultEnum checkLoginAuthEx(String tokenStr, RequestProcess pjp, ProceedingJoinPoint point) {
-        logger.info("执行了重载的 checkLoginAuthEx");
-
-        boolean checkSuccess = checkSign(point);
-        if (checkSuccess) {
-            logger.info("签名校验成功");
-            return TokenResultEnum.TOKEN_OK;
-        } else {
-            logger.info("签名校验失败");
+    protected TokenResultEnum checkOutSign(RequestProcess pjp, ProceedingJoinPoint point) {
+        System.out.println("============== 签名校验");
+        try {
+            boolean checkSuccess = checkSign(point);
+            if (checkSuccess) {
+                return TokenResultEnum.TOKEN_OK;
+            } else {
+                return TokenResultEnum.TOKEN_FAIL;
+            }
+        } catch (Exception e) {
+            logger.error("签名校验失败:" + e.getMessage());
             return TokenResultEnum.TOKEN_FAIL;
         }
     }
@@ -72,56 +80,42 @@ public class WebLogAopAspect extends RequestProcessAop {
 
     /**
      * 签名校验
-     *
+     * 算法参考 "快递鸟"
      * @param point
      * @return
+     * @throws Exception
      */
-    private boolean checkSign(ProceedingJoinPoint point) {
-        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-        HttpServletRequest request = attributes.getRequest();
-        String timestamp = request.getParameter("timestamp");
-        String appId = request.getParameter("app_id");
-        String sign = request.getParameter("sign");
-        log.info("checkSign入参 -> timestamp:" + timestamp + ",app_id:" + appId + ",sign:" + sign);
-        if (StringUtils.isEmpty(timestamp) || StringUtils.isEmpty(appId) || StringUtils.isEmpty(sign)) {
-            log.error("checkSign入参有误");
+    private boolean checkSign(ProceedingJoinPoint point) throws Exception {
+        Object[] objects = point.getArgs();
+        int length = objects.length;
+        if (length == 0) {
+            log.error("签名校验失败 -> 传输数据为空");
             return false;
         }
-
-        // 请求有效时间
-        long currentMillis = System.currentTimeMillis();
-        Long diff = currentMillis - Long.valueOf(timestamp);
-        if (Math.abs(diff) > 120000) {
-            log.error("签名校验失败:请求时间戳有误,diff millis:" + diff);
+        SinterInterfaceReqDto reqDto = (SinterInterfaceReqDto) objects[0];
+        log.info("签名校验入参 -> reqDto:" + reqDto);
+        if (StringUtils.isEmpty(reqDto.getBusinessID()) || StringUtils.isEmpty(reqDto.getDataType())) {
+            log.error("签名校验失败 -> 入参有误");
+            return false;
+        }
+        String apiKey = BUSINESS_INFO.get(reqDto.getBusinessID());
+        if (StringUtils.isEmpty(apiKey)) {
+            log.error("签名校验失败 -> 非法用户,用户ID:" + reqDto.getBusinessID());
             return false;
         }
 
         // 组装待签名的字符串(post中有参数的时候参与签名)
-        String unencryptedSign;
-        Map<String, String> paramsMap = Maps.newHashMap();
-        Object[] objects = point.getArgs();
-        int length = objects.length;
-        if (length > 0) {
-            Object obj = objects[0];
-            paramsMap = ObjectUtils.objectToMap(obj);
-            if (paramsMap == null) {
-                return false;
-            }
+        String sourceDataSign = reqDto.getDataSign();
+        String requestData = reqDto.getRequestData();
+        String dataSign = SinterUtil.encrypt(requestData, apiKey, Charsets.UTF_8.name());
+        if (!sourceDataSign.equals(dataSign)) {
+            System.out.println("checkSignTwo 签名校验失败");
+            log.error("签名校验失败 -> 传过来的签名:" + sourceDataSign + ",校验的签名:" + dataSign);
+            return false;
+        } else {
+            logger.info("签名校验成功");
+            return true;
         }
-        paramsMap.put("timestamp", timestamp);
-        paramsMap.put("appId", appId);
-        paramsMap.put("secretKey", SECRET_KEY);
-        unencryptedSign = ObjectUtils.mapToString(paramsMap, "&");
-        logger.info("aspect 待签名的字符串:" + unencryptedSign);
-
-        // 公钥验签
-        boolean verifySuccess = false;
-        try {
-            verifySuccess = RsaCryptUtil.verify(unencryptedSign.getBytes(), PUBLIC_KEY, sign);
-        } catch (Exception e) {
-            logger.error("签名校验失败:" + e.getMessage());
-        }
-        return verifySuccess;
     }
 
 }

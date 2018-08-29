@@ -80,7 +80,7 @@ public abstract class RequestProcessAop {
         return TokenResultEnum.TOKEN_OK;
     }
 
-    protected TokenResultEnum checkLoginAuthEx(String tokenStr, RequestProcess pjp,ProceedingJoinPoint point) {
+    protected TokenResultEnum checkOutSign(RequestProcess pjp,ProceedingJoinPoint point) {
         return TokenResultEnum.TOKEN_OK;
     }
 
@@ -196,23 +196,6 @@ public abstract class RequestProcessAop {
                         }
                     }
 
-                    // 自测试 -》用于对外接口签名校验
-                    TokenResultEnum tokenResultTest = checkLoginAuthEx(tokenStr, obj, pjp);
-                    if (null == tokenResultTest) {
-                        return ResultData.createAuthFailResult();
-                    } else {
-                        switch (tokenResultTest) {
-                            case TOKEN_OK:
-                                break;
-                            case TOKEN_FAIL:
-                                return ResultData.createAuthFailResult();
-                            case TOKEN_LOSE:
-                                return ResultData.createTokenLoseResult();
-                            default:
-                                return ResultData.createAuthFailResult();
-                        }
-                    }
-
                     // 校验功能权限
                     if (!checkPopedom(obj)) {
                         String message =
@@ -232,6 +215,26 @@ public abstract class RequestProcessAop {
                                             + pjp.getSignature().getName()
                                             : apiOperObj.value();
                             return ResultData.createDataPopedomFailResult(message);
+                        }
+                    }
+                }
+
+                // 自测试 -》用于对外接口签名校验
+                if(obj.checkSign()){
+                    // 自测试 -》用于对外接口签名校验
+                    TokenResultEnum tokenResultTest = checkOutSign(obj, pjp);
+                    if (null == tokenResultTest) {
+                        return ResultData.createAuthFailResult();
+                    } else {
+                        switch (tokenResultTest) {
+                            case TOKEN_OK:
+                                break;
+                            case TOKEN_FAIL:
+                                return ResultData.createAuthFailResult();
+                            case TOKEN_LOSE:
+                                return ResultData.createTokenLoseResult();
+                            default:
+                                return ResultData.createAuthFailResult();
                         }
                     }
                 }

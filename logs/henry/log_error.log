@@ -2,3 +2,12 @@
 [2018-08-29 10:25:39.184] [ERROR] [http-nio-8080-exec-1] com.henry.controller.DemoController Line:29  - controller modifyPhone=============================
 [2018-08-29 10:26:25.856] [ERROR] [http-nio-8080-exec-1] com.henry.controller.DemoController Line:29  - controller modifyPhone=============================
 [2018-08-29 10:38:16.065] [ERROR] [http-nio-8080-exec-2] com.henry.controller.DemoController Line:29  - controller modifyPhone=============================
+[2018-08-29 17:47:25.694] [ERROR] [http-nio-8080-exec-1] com.henry.controller.SignInterfaceController Line:32  - SignInterfaceController signTest=============================
+[2018-08-29 17:48:15.453] [ERROR] [http-nio-8080-exec-3] com.henry.controller.SignInterfaceController Line:32  - SignInterfaceController signTest=============================
+[2018-08-29 17:48:40.663] [ERROR] [http-nio-8080-exec-4] com.henry.controller.SignInterfaceController Line:32  - SignInterfaceController signTest=============================
+[2018-08-29 17:50:30.933] [ERROR] [http-nio-8080-exec-2] com.henry.controller.SignInterfaceController Line:32  - SignInterfaceController signTest=============================
+[2018-08-29 17:52:48.276] [ERROR] [http-nio-8080-exec-4] com.henry.controller.SignInterfaceController Line:32  - SignInterfaceController signTest=============================
+[2018-08-29 18:15:12.755] [ERROR] [http-nio-8080-exec-1] com.henry.advice.WebLogAopAspect Line:102 - 签名校验失败 -> 非法用户,用户ID:13425811
+[2018-08-29 18:15:48.476] [ERROR] [http-nio-8080-exec-3] com.henry.controller.SignInterfaceController Line:31  - SignInterfaceController signTest=============================
+[2018-08-29 18:26:17.204] [ERROR] [http-nio-8080-exec-1] com.henry.controller.SignInterfaceController Line:31  - SignInterfaceController signTest=============================
+[2018-08-29 18:27:19.552] [ERROR] [http-nio-8080-exec-1] com.henry.controller.SignInterfaceController Line:31  - SignInterfaceController signTest=============================

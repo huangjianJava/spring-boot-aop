@@ -30,4 +30,6 @@ public @interface RequestProcess {
 	public PopedomType popedomType() default PopedomType.None; //功能权限类型
 	
     public int groupFlag() default 0; //分组标志
+
+	public boolean checkSign() default false; //是否需要签名校验
 }
