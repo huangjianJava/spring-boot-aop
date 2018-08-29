@@ -1,13 +1,10 @@
 package com.henry.advice;
 
 import com.google.common.base.Charsets;
-import com.google.common.collect.Maps;
 import com.henry.common.aop.RequestProcess;
 import com.henry.common.aop.RequestProcessAop;
 import com.henry.dto.SinterInterfaceReqDto;
 import com.henry.result.enums.TokenResultEnum;
-import com.henry.utils.ObjectUtils;
-import com.henry.utils.RsaCryptUtil;
 import com.henry.utils.SinterUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -17,10 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 

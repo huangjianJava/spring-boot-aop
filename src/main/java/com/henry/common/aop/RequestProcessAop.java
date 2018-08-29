@@ -221,7 +221,6 @@ public abstract class RequestProcessAop {
 
                 // 自测试 -》用于对外接口签名校验
                 if(obj.checkSign()){
-                    // 自测试 -》用于对外接口签名校验
                     TokenResultEnum tokenResultTest = checkOutSign(obj, pjp);
                     if (null == tokenResultTest) {
                         return ResultData.createAuthFailResult();
